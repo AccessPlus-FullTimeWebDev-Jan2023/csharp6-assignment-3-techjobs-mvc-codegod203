@@ -8,6 +8,8 @@ using TechJobsMVCAutograded6.Models;
 
 namespace TechJobsMVCAutograded6.Controllers;
 
+
+
 public class SearchController : Controller
 {
     // GET: /<controller>/
@@ -21,26 +23,20 @@ public class SearchController : Controller
 
     public IActionResult Results(string searchType, string searchTerm)
     {
-        // Get the jobs list based on the search criteria
-        var jobs = new List<Job>();
+        ViewBag.columns = ListController.ColumnChoices;
+        List<Job> jobs = new List<Job>();
 
-        if (string.IsNullOrEmpty(searchTerm) || searchTerm.ToLower() == "all")
+        if (string.IsNullOrEmpty(searchTerm) || searchTerm.ToLower().Equals("all"))
         {
             jobs = JobData.FindAll();
+            ViewBag.jobs = jobs;
+            return View("Index");
         }
         else
         {
             jobs = JobData.FindByColumnAndValue(searchType, searchTerm);
+            ViewBag.jobs = jobs;
+            return View("Index");
         }
-
-        // Pass the jobs list and column choices to the view
-        ViewBag.jobs = jobs;
-        ViewBag.columns = ListController.ColumnChoices;
-
-        // Return the view
-        return View();
     }
-
-    // TODO #3 - Create an action method to process a search request and render the updated search views.
 }
-
